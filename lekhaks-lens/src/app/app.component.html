@@ -1,0 +1,238 @@
+<!-- src/app/app.component.html -->
+<div class="app-root">
+  <!-- Header -->
+  <header class="app-header">
+    <div class="logo">YourName<span>.</span></div>
+    <nav class="nav-links">
+      <a href="#hero">Home</a>
+      <a href="#photography">Photography</a>
+      <a href="#videography">Videography</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Hero Carousel -->
+  <section id="hero" class="hero-section">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>Visual stories in motion & stills</h1>
+        <p>
+          I create cinematic wedding films, bold portraits, and atmospheric
+          visuals for brands and artists.
+        </p>
+        <a (click)="openModal()" class="btn-primary">Get Quote Now</a>
+        <a>"Limited 2026 slots"</a>>
+      </div>
+
+      <div class="hero-carousel">
+        <div class="carousel-window">
+          <div
+            class="carousel-slide"
+            *ngFor="let slide of heroSlides; let i = index"
+            [class.active]="i === heroIndex"
+          >
+            <ng-container [ngSwitch]="slide.type">
+              <img
+                *ngSwitchCase="'photo'"
+                [src]="slide.src"
+                [alt]="slide.title"
+              />
+              <video
+                *ngSwitchCase="'video'"
+                [src]="slide.src"
+                muted
+                autoplay
+                loop
+              ></video>
+            </ng-container>
+            <div class="slide-overlay">
+              <h3>{{ slide.title }}</h3>
+              <p>{{ slide.description }}</p>
+            </div>
+          </div>
+        </div>
+        <button class="nav-btn left" (click)="prevHero()">‹</button>
+        <button class="nav-btn right" (click)="nextHero()">›</button>
+        <div class="dots">
+          <span
+            *ngFor="let slide of heroSlides; let i = index"
+            [class.active]="i === heroIndex"
+            (click)="heroIndex = i"
+          ></span>
+        </div>
+      </div>
+    </div>
+  </section>
+<section class="stats-section fade-in">
+  <div class="stats-grid">
+    <div class="stat-item" *ngFor="let stat of stats; let i = index">
+      <div class="stat-number" [class.animate]="animateStats">
+        {{ animateStats ? stat.value : 0 }}+
+      </div>
+      <div class="stat-label">{{ stat.label }}</div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="testimonials-section fade-in">
+  <div class="section-header">
+    <h2>What Clients Say</h2>
+    <p>Don't just take our word – see what real couples and brands are saying.</p>
+  </div>
+  <div class="testimonial-carousel">
+    <div class="testimonial-slide active">
+      <blockquote>"{{ testimonials[testimonialIndex].quote }}"</blockquote>
+      <div class="author">
+        <div class="author-info">
+          <strong>{{ testimonials[testimonialIndex].author }}</strong>
+          <span>{{ testimonials[testimonialIndex].role }}</span>
+        </div>
+      </div>
+    </div>
+    <!-- Auto-rotate every 5s or add prev/next -->
+    <button class="nav-btn right" (click)="nextTestimonial()">›</button>
+  </div>
+</section>
+
+<!-- As Seen In -->
+<section class="brands-section fade-in">
+  <h3>As featured in</h3>
+  <div class="brands-grid">
+    <img *ngFor="let brand of brands" [src]="brand" [alt]="'Brand'" class="brand-logo" />
+  </div>
+</section>
+  <!-- Photography Carousel -->
+  <section id="photography" class="section">
+    <div class="section-header">
+      <h2>Photography</h2>
+      <p>Curated selections from weddings, portraits, and editorial work.</p>
+      <h2>Featured Case Studies</h2>
+      <p>Click any image to see the full story, BTS, and client results.</p>
+    </div>
+
+    <div class="carousel-block">
+      <button class="nav-btn left" (click)="prevPhoto()">‹</button>
+
+      <div class="carousel-window">
+        <div
+          class="carousel-slide single"
+          *ngFor="let item of photographyItems; let i = index"
+          [class.active]="i === photoIndex"
+        >
+          <img [src]="item.src" [alt]="item.title" />
+          <div class="slide-overlay bottom">
+            <h3>{{ item.title }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <button class="nav-btn right" (click)="nextPhoto()">›</button>
+    </div>
+
+    <div class="thumb-row">
+      <div
+        class="thumb"
+        *ngFor="let item of photographyItems; let i = index"
+        [class.active]="i === photoIndex"
+        (click)="photoIndex = i"
+      >
+        <img [src]="item.thumb || item.src" [alt]="item.title" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Videography Carousel -->
+  <section id="videography" class="section">
+    <div class="section-header">
+      <h2>Videography</h2>
+      <p>Short teasers, music videos, and event films.</p>
+    </div>
+
+    <div class="carousel-block">
+      <button class="nav-btn left" (click)="prevVideo()">‹</button>
+
+      <div class="carousel-window">
+        <div
+          class="carousel-slide single"
+          *ngFor="let item of videographyItems; let i = index"
+          [class.active]="i === videoIndex"
+        >
+          <video [src]="item.src" controls></video>
+          <div class="slide-overlay bottom">
+            <h3>{{ item.title }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <button class="nav-btn right" (click)="nextVideo()">›</button>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="section about-section">
+    <div class="about-text">
+      <h2>About</h2>
+      <p>
+        I am a photographer and videographer focused on cinematic, clean visuals
+        with a love for low-light and minimal compositions.
+      </p>
+      <p>
+        I work with couples, brands, and independent artists to build visual
+        stories that feel honest and immersive.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="section contact-section">
+    <div class="section-header">
+      <h2>Contact</h2>
+      <p>Tell me about your project, event, or idea.</p>
+    </div>
+    <form class="contact-form">
+      <div class="row">
+        <input type="text" placeholder="Name" />
+        <input type="email" placeholder="Email" />
+      </div>
+      <div class="row">
+        <input type="text" placeholder="Project type (wedding, brand, etc.)" />
+      </div>
+      <div class="row">
+        <textarea rows="4" placeholder="Describe what you have in mind"></textarea>
+      </div>
+      <button type="submit" class="btn-primary">Send inquiry</button>
+    </form>
+  </section>
+  <!-- Marketing Modal (Lead Capture) -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="closeModal()">&times;</button>
+    <h3>Ready to create magic?</h3>
+    <p>Get your custom quote in 24 hours. Limited slots available.</p>
+    <form class="booking-form">
+      <input type="text" placeholder="Full Name" required />
+      <input type="tel" placeholder="Phone/WhatsApp" required />
+      <select required>
+        <option>Wedding Film + Photos</option>
+        <option>Portrait Session</option>
+        <option>Brand Shoot</option>
+        <option>Event Coverage</option>
+        <option>Custom Quote</option>
+      </select>
+      <textarea placeholder="Tell me about your vision, date, and budget"></textarea>
+      <div class="urgency-note">
+        <strong>⚡ Limited dates open for 2026</strong>
+      </div>
+      <button type="submit" class="btn-primary full-width">Get My Quote</button>
+    </form>
+  </div>
+</div>
+
+<footer class="footer">
+  <!-- <span>© {{ new Date().getFullYear() }} Your Name. All rights reserved.</span> -->
+   <span>© {{ currentYear }} Your Name. All rights reserved.</span>
+    <span>Designed & Developed by Your Name</span>
+</footer>
+</div>
