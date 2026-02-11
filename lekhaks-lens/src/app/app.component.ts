@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
     },
     {
       type: 'video',
-      src: 'assets/hero/K & I final.mp4',
+      src: 'assets/hero/NightLife.mp4',
       title: 'Showreel',
       description: 'Highlights from recent shoots.'
     }
