@@ -97,7 +97,7 @@ export class AppComponent implements OnInit {
 }
 
 // Scroll trigger for animations
-@HostListener('window:scroll', ['$event'])
+@HostListener('window:scroll')
 onWindowScroll() {
   const elements = document.querySelectorAll('.fade-in');
   elements.forEach(el => {
@@ -186,12 +186,15 @@ onWindowScroll() {
     this.testimonialIndex = (this.testimonialIndex + 1) % this.testimonials.length;
   }
 
-  openModal() {
+  openModal(event?: Event): void {
     this.showModal = true;
     document.body.style.overflow = 'hidden';
   }
 
-  closeModal() {
+  closeModal(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
     this.showModal = false;
     document.body.style.overflow = '';
   }
