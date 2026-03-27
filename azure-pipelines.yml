@@ -21,7 +21,7 @@ variables:
   # image tag uses incremental version with 'v' prefix
   imageTag: 'v$(Rev:r)'
   registry: http://192.168.0.166:5005
-  imageName: $(registry)/$(appName):$(imageTag)
+  imageName: $(appName):$(imageTag)
 
 pool:
   vmImage: 'ubuntu-latest'
