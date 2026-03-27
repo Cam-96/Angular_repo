@@ -38,28 +38,14 @@ steps:
     npm run build -- --configuration production
   displayName: 'Install and build Angular'
 
-- task: Docker@2
+- script: |
+    cd lekhaks-lens
+    docker build -t $(imageName) .
   displayName: 'Build Docker image'
-  inputs:
-    command: build
-    repository: $(registry)/$(appName)
-    Dockerfile: $(System.DefaultWorkingDirectory)/lekhaks-lens/Dockerfile
-    tags: $(imageTag)
-    buildContext: $(System.DefaultWorkingDirectory)/lekhaks-lens
-
-- task: Docker@2
-  displayName: 'Login to private registry'
-  inputs:
-    command: login
-    containerRegistry: |
-    # For auth, use service connection or pipeline variable mechanisms.
-    # Option 1: Azure Container Registry connection (if you had ACR)
-    # Option 2: repeated manual login below by script.
-    # Using script next.
 
 - script: |
     echo "Logging in to NAS registry"
-    echo "$(REGISTRY_PASSWORD)" | docker login $(registry) --username $(REGISTRY_USERNAME) --password-stdin || true
+    echo "$(REGISTRY_PASSWORD)" | docker login $(registry) --username "$(REGISTRY_USERNAME)" --password-stdin
   displayName: 'Docker login (private registry)'
   env:
     REGISTRY_USERNAME: $(REGISTRY_USERNAME)
