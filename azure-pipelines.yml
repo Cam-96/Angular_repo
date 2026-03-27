@@ -20,7 +20,7 @@ variables:
   appName: lekhaks-lens
   # image tag uses incremental version with 'v' prefix
   imageTag: 'v$(Rev:r)'
-  registry: http://192.168.0.166:5005
+  registry: 192.168.0.166:5005
   imageName: $(registry)/$(appName):$(imageTag)
 
 pool:
@@ -28,11 +28,12 @@ pool:
 
 steps:
 - task: NodeTool@0
-  displayName: 'Use Node.js 14'
+  displayName: 'Use Node.js 16'
   inputs:
-    versionSpec: '14.x'
+    versionSpec: '16.x'
 
 - script: |
+    cd lekhaks-lens
     npm ci
     npm run build -- --configuration production
   displayName: 'Install and build Angular'
@@ -42,16 +43,20 @@ steps:
   inputs:
     command: build
     repository: $(registry)/$(appName)
-    Dockerfile: $(System.DefaultWorkingDirectory)/Dockerfile
+    Dockerfile: $(System.DefaultWorkingDirectory)/lekhaks-lens/Dockerfile
     tags: $(imageTag)
-    buildContext: $(System.DefaultWorkingDirectory)
+    buildContext: $(System.DefaultWorkingDirectory)/lekhaks-lens
 
 - task: Docker@2
   displayName: 'Login to private registry'
   inputs:
     command: login
     containerRegistry: |
-  # Login using script
+    # For auth, use service connection or pipeline variable mechanisms.
+    # Option 1: Azure Container Registry connection (if you had ACR)
+    # Option 2: repeated manual login below by script.
+    # Using script next.
+
 - script: |
     echo "Logging in to NAS registry"
     echo "$(REGISTRY_PASSWORD)" | docker login $(registry) --username $(REGISTRY_USERNAME) --password-stdin || true
