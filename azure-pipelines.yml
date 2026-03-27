@@ -51,11 +51,7 @@ steps:
   inputs:
     command: login
     containerRegistry: |
-      # For auth, use service connection or pipeline variable mechanisms.
-      # Option 1: Azure Container Registry connection (if you had ACR)
-      # Option 2: repeated manual login below by script.
-      # Using script next.
-
+  # Login using script
 - script: |
     echo "Logging in to NAS registry"
     echo "$(REGISTRY_PASSWORD)" | docker login $(registry) --username $(REGISTRY_USERNAME) --password-stdin || true
