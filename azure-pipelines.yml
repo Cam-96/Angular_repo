@@ -28,9 +28,9 @@ pool:
 
 steps:
 - task: NodeTool@0
-  displayName: 'Use Node.js 16'
+  displayName: 'Use Node.js 14'
   inputs:
-    versionSpec: '16.x'
+    versionSpec: '14.x'
 
 - script: |
     npm ci
