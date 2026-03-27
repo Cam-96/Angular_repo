@@ -4,19 +4,70 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- main
+  branches:
+    include:
+      - main
+      - master
+
+pr:
+  branches:
+    include:
+      - main
+      - master
+
+variables:
+  # Angular app name
+  appName: lekhaks-lens
+  # image tag uses incremental version with 'v' prefix
+  imageTag: 'v$(Rev:r)'
+  registry: 192.168.0.166:5005
+  imageName: $(registry)/$(appName):$(imageTag)
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
 steps:
 - task: NodeTool@0
+  displayName: 'Use Node.js 16'
   inputs:
-    versionSpec: '12.22.x'
-  displayName: 'Install Node.js'
+    versionSpec: '16.x'
 
 - script: |
-    npm install -g @angular/cli@8.3.29
-    npm install
-    ng build --prod
-  displayName: 'npm install and build'
+    npm ci
+    npm run build -- --configuration production
+  displayName: 'Install and build Angular'
+
+- task: Docker@2
+  displayName: 'Build Docker image'
+  inputs:
+    command: build
+    repository: $(registry)/$(appName)
+    Dockerfile: $(System.DefaultWorkingDirectory)/Dockerfile
+    tags: $(imageTag)
+    buildContext: $(System.DefaultWorkingDirectory)
+
+- task: Docker@2
+  displayName: 'Login to private registry'
+  inputs:
+    command: login
+    containerRegistry: |
+      # For auth, use service connection or pipeline variable mechanisms.
+      # Option 1: Azure Container Registry connection (if you had ACR)
+      # Option 2: repeated manual login below by script.
+      # Using script next.
+
+- script: |
+    echo "Logging in to NAS registry"
+    echo "$(REGISTRY_PASSWORD)" | docker login $(registry) --username $(REGISTRY_USERNAME) --password-stdin || true
+  displayName: 'Docker login (private registry)'
+  env:
+    REGISTRY_USERNAME: $(REGISTRY_USERNAME)
+    REGISTRY_PASSWORD: $(REGISTRY_PASSWORD)
+
+- script: |
+    docker push $(imageName)
+  displayName: 'Push Docker image to NAS registry'
+
+- script: |
+    echo "Image pushed: $(imageName)"
+  displayName: 'Show image reference'
