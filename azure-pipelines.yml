@@ -19,7 +19,7 @@ variables:
   # Angular app name
   appName: lekhaks-lens
   # image tag uses incremental version with 'v' prefix
-  imageTag: 'v$(Rev:r)'
+  imageTag: v$(Build.BuildId)
   registry: http://192.168.0.166:5005
   imageName: $(appName):$(imageTag)
 
