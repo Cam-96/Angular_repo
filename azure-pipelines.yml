@@ -24,7 +24,7 @@ variables:
   imageName: $(appName):$(imageTag)
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: 'NAS_agent'
 
 steps:
 - task: NodeTool@0
