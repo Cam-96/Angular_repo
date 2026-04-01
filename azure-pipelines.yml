@@ -20,7 +20,7 @@ variables:
   appName: lekhaks-lens
   # image tag uses incremental version with 'v' prefix
   imageTag: v$(Build.BuildId)
-  registry: http://192.168.0.166:5005
+  registry: 192.168.0.166:5005
   imageName: $(registry)/$(appName):$(imageTag)
 
 pool:
@@ -45,7 +45,7 @@ steps:
 
 - script: |
     echo "Logging in to NAS registry"
-    echo "$(REGISTRY_PASSWORD)" | docker login $(registry) --username "$(REGISTRY_USERNAME)" --password-stdin
+    echo "$(REGISTRY_PASSWORD)" | docker login http://$(registry) --username "$(REGISTRY_USERNAME)" --password-stdin
   displayName: 'Docker login (private registry)'
   env:
     REGISTRY_USERNAME: $(REGISTRY_USERNAME)
